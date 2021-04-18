@@ -74,7 +74,7 @@ if decision == 'direct':
 
                 downloadFile = 'gnl-content-direct.csv'
                 with open(downloadFile, 'w') as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
 
                     columnHead = 'String,Type,Confidence'
                     filewriter.writerow(columnHead.split(','))
@@ -99,8 +99,8 @@ if decision == 'direct':
                             print(u'{:<16}: {}'.format('content', content) + '\n')
                             print('')
 
-                            row = f'{content},{category.name},{category.confidence}'
-                            filewriter.writerow(row.split(','))
+                            row = [content, category.name, category.confidence]
+                            filewriter.writerow(row)
 
                     try:
                         classify_text(content)
@@ -112,7 +112,7 @@ if decision == 'direct':
             with open(DIRECT_A_FILE, 'r', encoding="utf8") as gnl:
                 downloadFile = 'gnl-sentiment-direct.csv'
                 with open(downloadFile, 'w') as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
                     content2 = gnl.read()
 
                     columnHead = 'Content,Sentiment Score,Sentiment Magnitude'
@@ -132,15 +132,15 @@ if decision == 'direct':
                     print('Sentiment: {}, {}'.format(
                         sentiment.score, sentiment.magnitude))
 
-                    row = f'{content2},{sentiment.score},{sentiment.magnitude}'
-                    filewriter.writerow(row.split(','))
+                    row = [content2, sentiment.score, sentiment.magnitude]
+                    filewriter.writerow(row)
 
         # Entity Sentiment (gnl-entity-sentiment.py)
         if choice == 'D' or choice == 'd':
             with open(DIRECT_D_FILE, 'r', encoding="utf8") as gnl:
                 downloadFile = 'gnl-entity-sent-direct.csv'
                 with open(downloadFile, 'w') as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
                     content3 = gnl.read()
 
                     columnHead = 'Name,Begin Offset,Content,Magnitude,Sentiment,Type,Salience,Sentiment'
@@ -179,10 +179,10 @@ if decision == 'direct':
                                 print(u'Salience: {}'.format(entity.salience))
                                 print(u'Sentiment: {}\n'.format(entity.sentiment))
 
-                                row = f'{entity.name},{mention.text.begin_offset},{mention.text.content},' \
-                                      f'{mention.sentiment.magnitude},{mention.sentiment.score},{mention.type},' \
-                                      f'{entity.salience},{entity.sentiment}'
-                                filewriter.writerow(row.split(','))
+                                row = [entity.name, mention.text.begin_offset, mention.text.content,
+                                       mention.sentiment.magnitude, mention.sentiment.score, mention.type_,
+                                       entity.salience, entity.sentiment]
+                                filewriter.writerow(row)
 
                     entity_sentiment_text(content3)
 
@@ -191,7 +191,7 @@ if decision == 'direct':
             with open(DIRECT_C_FILE, 'r', encoding="utf8") as gnl:
                 downloadFile = 'gnl-entity-analysis-direct.csv'
                 with open(downloadFile, 'w') as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
                     content4 = gnl.read()
                     columnHead = 'Name,Type,Salience,Wikipedia URL,MID'
                     filewriter.writerow(columnHead.split(','))
@@ -218,16 +218,16 @@ if decision == 'direct':
                         print(u'{:<16}: {}'.format('wikipedia_url', entity.metadata.get('wikipedia_url', '-')))
                         print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
 
-                        row = f'{entity.name},{entity_type.name},{entity.salience},' \
-                              f'{entity.metadata.get("wikipedia_url")},{entity.metadata.get("mid")}'
-                        filewriter.writerow(row.split(','))
+                        row = [entity.name, entity_type.name, entity.salience,
+                               entity.metadata.get("wikipedia_url"), entity.metadata.get("mid")]
+                        filewriter.writerow(row)
 
         # Syntax Analysis (gnl-analyze-syntax.py)
         if choice == 'E' or choice == 'e':
             with open(DIRECT_E_FILE, 'r', encoding="utf8") as gnl:
                 downloadFile = 'gnl-syntax-analysis.csv'
                 with open(downloadFile, 'w') as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
                     content5 = gnl.read()
 
                     columnHead = 'POS Tag,Content'
@@ -255,7 +255,7 @@ if decision == 'direct':
 
                         for token in tokens:
                             print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag], token.text.content))
-                            row = f'{pos_tag[token.part_of_speech.tag]},{token.text.content}'
+                            row = [pos_tag[token.part_of_speech.tag], token.text.content]
                             filewriter.writerow(row)
 
                     syntax_text(content5)
@@ -287,7 +287,7 @@ if decision == 'bulk':
 
             filedownload = 'gnl-content-bulk.csv'
             with open(filedownload, "w") as file:
-                filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                filewriter = csv.writer(file)
 
                 columnHead = 'URL,Type,Confidence,Content'
                 filewriter.writerow(columnHead.split(','))
@@ -313,8 +313,8 @@ if decision == 'bulk':
                         print(u'{:<16}: {}'.format('confidence', category.confidence))
                         # print(u'{:<16}: {}'.format('string', data) + '\n')
 
-                        row = f'{url},{category.name},{category.confidence},{text}'
-                        filewriter.writerow(row.split(','))
+                        row = [url, category.name, category.confidence, text]
+                        filewriter.writerow(row)
 
 
                 with open(BULK_B_FILE, 'r', encoding="utf8") as b:
@@ -358,7 +358,7 @@ if decision == 'bulk':
             with open(BULK_A_FILE, 'r', encoding="utf8") as b:
                 downloadFile = 'gnl-sentiment-bulk.csv'
                 with open(downloadFile, "w") as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
 
                     columnHead = 'URL,Sentiment'
                     filewriter.writerow(columnHead.split(","))
@@ -396,14 +396,14 @@ if decision == 'bulk':
                             sentiment.score, sentiment.magnitude) + '\n')
                         print('')
 
-                        row = f'{url},{sentiment.magnitude}'
-                        filewriter.writerow(row.split(','))
+                        row = [url, sentiment.magnitude]
+                        filewriter.writerow(row)
 
         # Entity Sentiment (gnl-entity-sentiment.py)
         if choice == 'D' or choice == 'd':
             downloadFile = 'gnl-entity-sent-bulk.csv'
             with open(downloadFile, 'w') as file:
-                filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                filewriter = csv.writer(file, quoting=csv.QUOTE_MINIMAL, )
 
                 columnHead = 'URL,Name,Begin Offset,Content,Magnitude,Sentiment,Type,Salience,Entity Sentiment'
                 filewriter.writerow(columnHead.split(','))
@@ -443,9 +443,9 @@ if decision == 'bulk':
                             print(u'Salience: {}'.format(entity.salience))
                             print(u'Sentiment: {}\n'.format(entity.sentiment))
 
-                            row2 = f'{url},{entity.name},{mention.text.begin_offset},{mention.text.content},\
-                                     {mention.sentiment.magnitude},{mention.type_},{entity.salience},{entity.sentiment}'
-                            filewriter.writerow(row2.split(','))
+                            row2 = [url, entity.name, mention.text.begin_offset, mention.text.content,
+                                    mention.sentiment.magnitude, entity.sentiment, mention.type_, entity.salience, entity.sentiment]
+                            filewriter.writerow(row2)
 
 
                 with open(BULK_D_FILE, 'r', encoding="utf8") as b:
@@ -476,7 +476,7 @@ if decision == 'bulk':
 
                 downloadFile = 'gnl-entity-bulk.csv'
                 with open(downloadFile, 'w') as file:
-                    filewriter = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                    filewriter = csv.writer(file)
 
                     columnHead = 'URL,Name,Type,Salience,Wikipedia URL,MID'
                     filewriter.writerow(columnHead.split(','))
@@ -522,9 +522,9 @@ if decision == 'bulk':
                             print(u'{:<16}: {}'.format('wikipedia_url', entity.metadata.get('wikipedia_url', '-')))
                             print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
 
-                            row = f'{url},{entity.name},{entity_type.name},{entity.salience},\
-                                    {entity.metadata.get("wikipedia_url")},{entity.metadata.get("mid")}'
-                            filewriter.writerow(row.split(','))
+                            row = [url, entity.name, entity_type.name, entity.salience,
+                                   entity.metadata.get("wikipedia_url"), entity.metadata.get("mid")]
+                            filewriter.writerow(row)
 
 
         # This if statement handles if while loop continues or breaks based on user input

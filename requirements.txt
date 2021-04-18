@@ -1,0 +1,6 @@
+beautifulsoup4==4.9.3
+google-cloud==0.34.0
+google-cloud-core==1.6.0
+google-cloud-language==2.0.0
+google-cloud-datastore==2.1.0
+grpcio==1.36.1
